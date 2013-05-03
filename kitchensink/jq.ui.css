@@ -247,7 +247,7 @@ background:#333;
 	overflow-x:hidden;
 	-webkit-overflow-scrolling:touch;
 	-webkit-backface-visibility: hidden;
-	-webkit-perspective: 1000;
+	/*-webkit-perspective: 1000;*/
 } /* This class is applied to the divs that contain the various "views" or pages of the app. */ 
 
 .panel > * {
