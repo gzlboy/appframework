@@ -119,6 +119,7 @@
             pagingDiv: null,
             pagingCssName: "carousel_paging",
             pagingCssNameSelected: "carousel_paging_selected",
+			spacerCssName:"carousel_spacer",//新增一个占位div属性，用于给占位的div应用样式
             pagingFunction: null,
             lockMove:false,
             okToMove: false,
@@ -414,7 +415,8 @@
                 }
                 // Create the paging dots
                 if (this.pagingDiv) {
-                    this.pagingDiv.innerHTML = ""
+                    this.pagingDiv.innerHTML = "";
+					var pagingEl_w,spacerEl_w;
                     for (i = 0; i < this.childrenCount; i++) {
 
                         var pagingEl = document.createElement("div");
@@ -431,7 +433,8 @@
                         };
                         var spacerEl = document.createElement("div");
 
-                        spacerEl.style.width = "20px";
+                        //spacerEl.style.width = "20px";注释掉这句，加了下面一句，指定占位div的样式名
+						spacerEl.className=this.spacerCssName;
                         if(this.horizontal){
                             spacerEl.style.display = "inline-block";
                             spacerEl.innerHTML = "&nbsp;";
@@ -444,14 +447,22 @@
                         this.pagingDiv.appendChild(pagingEl);
                         if (i + 1 < (this.childrenCount))
                             this.pagingDiv.appendChild(spacerEl);
-                        pagingEl = null;
+                        //获取圆点和占位div的宽度，给下面计算宽度用的
+						if(!pagingEl_w)pagingEl_w=parseInt($(pagingEl).width());
+						if(!spacerEl_w)spacerEl_w=parseInt($(spacerEl).width());
+						pagingEl = null;
                         spacerEl = null;
                     }
                     if(this.horizontal){
-                        this.pagingDiv.style.width = (this.childrenCount) * 50 + "px";
+                        //widthSum为每个圆点和一个占位div的宽度(样式定义决定了这个宽度)，最后一个占位div没有，所以减掉一个
+						var widthSum=(this.childrenCount) * (pagingEl_w + spacerEl_w) - spacerEl_w;
+                        this.pagingDiv.style.width = widthSum + "px";
                         this.pagingDiv.style.height = "25px";
+						//设置pagingDiv左偏移量
+						this.pagingDiv.style.left = ((this.container.clientWidth) * 0.5-widthSum/2) + "px";
                     }
                     else {
+						//垂直方向的暂未处理
                         this.pagingDiv.style.height = (this.childrenCount) * 50 + "px";
                         this.pagingDiv.style.width = "25px";
                     }
